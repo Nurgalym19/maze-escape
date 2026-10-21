@@ -8,15 +8,88 @@
  */
 public class Escape {
 
-    /**
-     * path: the cells of the way out, from 0 to the last cell.
-     * visited: how many cells are marked as visited at the moment the exit is marked (the start and the exit are counted).
-     * deadEnds: how many cells of the maze have exactly one open neighbour.
-     */
     public record Result(int[] path, int visited, int deadEnds) {}
 
     public static Result escape(Input.Walls w, int[] broken) {
-        // TODO
-        return new Result(new int[0], 0, 0);
+        int n = w.cells();
+        int cols = w.cols();
+        int exit = n - 1;
+        int[][] g = Graphs.open(w, broken);
+
+
+        int deadEnds = 0;
+        for (int c = 0; c < n; c++) {
+            if (g[c].length == 1) deadEnds++;
+        }
+
+        boolean[] visited = new boolean[n];
+        int[] parent = new int[n];
+        int[] next = new int[n];
+        int[] stack = new int[n];
+        int top = 0;
+        int visitedCount = 0;
+
+        stack[top++] = 0;
+        visited[0] = true;
+        visitedCount = 1;
+        parent[0] = -1;
+
+        while (top > 0 && !visited[exit]) {
+            int c = stack[top - 1];
+            if (next[c] == 4) {
+                top--;
+                continue;
+            }
+            int d = next[c]++;
+
+
+
+            int r = c / cols;
+            int col = c % cols;
+            int nb = -1;
+            if (d == 0) nb = (r - 1) * cols + col;
+            else if (d == 1) nb = r * cols + (col + 1);
+            else if (d == 2) nb = (r + 1) * cols + col;
+            else if (d == 3) nb = r * cols + (col - 1);
+
+
+            if (nb < 0 || nb >= n || visited[nb]) {
+                continue;
+            }
+            boolean isOpen = false;
+            for (int neighbor : g[c]) {
+                if (neighbor == nb) {
+                    isOpen = true;
+                    break;
+                }
+            }
+            if (!isOpen) {
+                continue;
+            }
+
+            visited[nb] = true;
+            visitedCount++;
+            parent[nb] = c;
+            stack[top++] = nb;
+        }
+
+
+        int tempCount = 0;
+        int curr = exit;
+
+        while (curr != -1) {
+            tempCount++;
+            if (curr == 0) break;
+            curr = parent[curr];
+        }
+
+        int[] path = new int[tempCount];
+        curr = exit;
+        for (int i = tempCount - 1; i >= 0; i--) {
+            path[i] = curr;
+            curr = parent[curr];
+        }
+
+        return new Result(path, visitedCount, deadEnds);
     }
 }
