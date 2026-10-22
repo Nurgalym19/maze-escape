@@ -24,7 +24,7 @@ public class DisjointSet {
         while (parent[root] != root) {
             root = parent[root];
         }
-        // path compression: everyone on the path now points to the root
+
         while (parent[x] != root) {
             int next = parent[x];
             parent[x] = root;
@@ -40,7 +40,7 @@ public class DisjointSet {
         if (ra == rb) {
             return false;
         }
-        // union by size: the smaller tree goes under the larger one
+
         if (size[ra] < size[rb]) {
             int tmp = ra;
             ra = rb;
