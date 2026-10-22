@@ -65,8 +65,8 @@ public class Maze {
         while (!pq.isEmpty()) {
             int k = pq.poll();
             int a = w.a()[k], b = w.b()[k];
-            if (visited[a] && visited[b]) continue;   // both ends already in the tree
-            int c = visited[a] ? b : a;                // the new cell
+            if (visited[a] && visited[b]) continue;
+            int c = visited[a] ? b : a;
             total += w.cost()[k];
             visited[c] = true;
             for (int e : adj[c]) {
