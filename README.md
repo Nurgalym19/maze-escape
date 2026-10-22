@@ -1,8 +1,8 @@
 # Assignment 3. Maze Escape
 
-Student ID:
-Name:
-Group:
+Student ID:254965
+Name: Nurgalym Ermek
+Group:SE-2519
 Maze size (rows x columns):
 
 This file is the report. Fill it in as you go. How to start: `START_HERE.md`. The task: `docs/Assignment3.pdf`.
@@ -54,10 +54,10 @@ The syllabus requires you to say which AI tools you used and for what. Write the
 Milliseconds, 5 runs each, from `java -cp out Bench`.
 
 | maze | Kruskal | Prim |
-|---|---|---|
-| 100 x 100 | | |
-| 300 x 300 | | |
-| 1000 x 1000 | | |
+|---|---------|------|
+| 100 x 100 | 27      | 18   |
+| 300 x 300 | 122     | 193  |
+| 1000 x 1000 | 1941    | 3905 |
 
 What do the numbers say about how the time grows? Two or three sentences.
 
