@@ -16,12 +16,12 @@ public class Zones {
         int[][] out = Graphs.slidesFrom(s);
         int[][] in = Graphs.slidesInto(s);
 
-        // Pass 1: DFS on the slides, write the cells in the order they are finished
+
         boolean[] seen = new boolean[n];
         int[] order = new int[n];
         int cnt = 0;
         int[] stack = new int[n];
-        int[] pos = new int[n];          // next slide to try for each cell
+        int[] pos = new int[n];
         for (int start = 0; start < n; start++) {
             if (seen[start]) continue;
             int top = 0;
@@ -37,12 +37,12 @@ public class Zones {
                     }
                 } else {
                     top--;
-                    order[cnt++] = u;    // u is finished
+                    order[cnt++] = u;
                 }
             }
         }
 
-        // Pass 2: from the last finished cell, DFS on the reversed slides
+
         int[] zoneOf = new int[n];
         Arrays.fill(zoneOf, -1);
         int zones = 0;
@@ -71,7 +71,7 @@ public class Zones {
     public static long[] routes(Input.Slides s, int[] zoneOf, int zoneCount) {
         int n = s.n();
 
-        // group the cells by zone (counting sort), so we can walk zone by zone
+
         int[] startIdx = new int[zoneCount + 1];
         for (int c = 0; c < n; c++) startIdx[zoneOf[c] + 1]++;
         for (int z = 0; z < zoneCount; z++) startIdx[z + 1] += startIdx[z];
@@ -81,21 +81,20 @@ public class Zones {
 
         int[][] out = Graphs.slidesFrom(s);
         final long INF = Long.MAX_VALUE;
-        long[] dist = new long[zoneCount];   // cheapest cost from the zone of the start
-        long[] len = new long[zoneCount];    // longest chain of zones that ends in this zone
+        long[] dist = new long[zoneCount];
+        long[] len = new long[zoneCount];
         Arrays.fill(dist, INF);
         Arrays.fill(len, 1);
         dist[zoneOf[0]] = 0;
 
         long stages = 1;
         for (int z = 0; z < zoneCount; z++) {
-            // all slides into z come from smaller numbers, so dist[z] and len[z] are final now
             stages = Math.max(stages, len[z]);
             for (int i = startIdx[z]; i < startIdx[z + 1]; i++) {
                 int c = cells[i];
                 for (int slide : out[c]) {
                     int y = zoneOf[s.to()[slide]];
-                    if (y == z) continue;    // inside a zone walking is free
+                    if (y == z) continue;
                     len[y] = Math.max(len[y], len[z] + 1);
                     if (dist[z] != INF) {
                         dist[y] = Math.min(dist[y], dist[z] + s.time()[slide]);
