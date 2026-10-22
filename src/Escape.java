@@ -42,10 +42,10 @@ public class Escape {
             int d = next[c]++;
             int nb;
             switch (d) {
-                case 0 -> nb = c - cols;   // up
-                case 1 -> nb = c + 1;      // right
-                case 2 -> nb = c + cols;   // down
-                default -> nb = c - 1;     // left
+                case 0 -> nb = c - cols;
+                case 1 -> nb = c + 1;
+                case 2 -> nb = c + cols;
+                default -> nb = c - 1;
             }
             if (!isOpen(g[c], nb) || visited[nb]) continue;
 
@@ -55,7 +55,7 @@ public class Escape {
             stack[top++] = nb;
         }
 
-        // restore the path from the exit back to the start, then reverse it
+
         int len = 0;
         for (int c = exit; c != -1; c = parent[c]) len++;
         int[] path = new int[len];
