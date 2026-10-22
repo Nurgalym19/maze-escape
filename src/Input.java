@@ -13,6 +13,11 @@ public class Input {
     /** The slides: n cells, S one-way slides from[i] -> to[i] that take time[i]. */
     public record Slides(int n, int[] from, int[] to, int[] time) {
         public int count() { return from.length; }
+
+        public long[] w() {
+
+            return new long[0];
+        }
     }
 
     public static Walls readWalls(String path) throws IOException {

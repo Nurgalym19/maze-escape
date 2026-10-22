@@ -16,7 +16,6 @@ public class Escape {
         int exit = n - 1;
         int[][] g = Graphs.open(w, broken);
 
-
         int deadEnds = 0;
         for (int c = 0; c < n; c++) {
             if (g[c].length == 1) deadEnds++;
@@ -27,7 +26,7 @@ public class Escape {
         int[] next = new int[n];
         int[] stack = new int[n];
         int top = 0;
-        int visitedCount = 0;
+        int visitedCount;
 
         stack[top++] = 0;
         visited[0] = true;
@@ -41,31 +40,14 @@ public class Escape {
                 continue;
             }
             int d = next[c]++;
-
-
-
-            int r = c / cols;
-            int col = c % cols;
-            int nb = -1;
-            if (d == 0) nb = (r - 1) * cols + col;
-            else if (d == 1) nb = r * cols + (col + 1);
-            else if (d == 2) nb = (r + 1) * cols + col;
-            else if (d == 3) nb = r * cols + (col - 1);
-
-
-            if (nb < 0 || nb >= n || visited[nb]) {
-                continue;
+            int nb;
+            switch (d) {
+                case 0 -> nb = c - cols;   // up
+                case 1 -> nb = c + 1;      // right
+                case 2 -> nb = c + cols;   // down
+                default -> nb = c - 1;     // left
             }
-            boolean isOpen = false;
-            for (int neighbor : g[c]) {
-                if (neighbor == nb) {
-                    isOpen = true;
-                    break;
-                }
-            }
-            if (!isOpen) {
-                continue;
-            }
+            if (!isOpen(g[c], nb) || visited[nb]) continue;
 
             visited[nb] = true;
             visitedCount++;
@@ -73,23 +55,20 @@ public class Escape {
             stack[top++] = nb;
         }
 
-
-        int tempCount = 0;
-        int curr = exit;
-
-        while (curr != -1) {
-            tempCount++;
-            if (curr == 0) break;
-            curr = parent[curr];
-        }
-
-        int[] path = new int[tempCount];
-        curr = exit;
-        for (int i = tempCount - 1; i >= 0; i--) {
-            path[i] = curr;
-            curr = parent[curr];
-        }
+        // restore the path from the exit back to the start, then reverse it
+        int len = 0;
+        for (int c = exit; c != -1; c = parent[c]) len++;
+        int[] path = new int[len];
+        int i = len - 1;
+        for (int c = exit; c != -1; c = parent[c]) path[i--] = c;
 
         return new Result(path, visitedCount, deadEnds);
+    }
+
+    private static boolean isOpen(int[] neighbours, int x) {
+        for (int y : neighbours) {
+            if (y == x) return true;
+        }
+        return false;
     }
 }
